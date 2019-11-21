@@ -1,0 +1,8 @@
+@startuml
+interface EventLoopGroup
+class NioEventLoopGroup {
+}
+
+note left of NioEventLoopGroup: this is base class
+EventLoopGroup <|-- NioEventLoopGroup
+@enduml
