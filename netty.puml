@@ -5,4 +5,30 @@ class NioEventLoopGroup {
 
 note left of NioEventLoopGroup: this is base class
 EventLoopGroup <|-- NioEventLoopGroup
+
+abstract AbstractBootstrap {
+    -options Map<ChannelOptions<?>, Object>;
+}
+class ServerBootstrap {
+    -childOptions Map<ChannelOptions<?>, Object>;
+}
+AbstractBootstrap <|-- ServerBootstrap
+
+interface Channel
+interface ServerChannel
+interface ServerSocketChannel
+note top of ServerSocketChannel: A TCP/IP {@link ServerChannel} which accepts incoming TCP/IP connections.
+
+class NioServerSocketChannel
+class OIOServerSocketChannel
+class EpollServerSocketChannel
+class KQueueServerSocketChannel
+
+Channel <|-- ServerChannel
+ServerChannel <|-- ServerSocketChannel
+ServerSocketChannel <|.. NioServerSocketChannel
+ServerSocketChannel <|.. OIOServerSocketChannel
+ServerSocketChannel <|.. EpollServerSocketChannel
+ServerSocketChannel <|.. KQueueServerSocketChannel
+
 @enduml
