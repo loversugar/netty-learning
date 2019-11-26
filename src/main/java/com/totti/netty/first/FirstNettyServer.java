@@ -32,7 +32,8 @@ public class FirstNettyServer {
             serverBootstrap.childHandler(new ChannelInitializer<SocketChannel>() {
                 @Override
                 protected void initChannel(SocketChannel ch) throws Exception {
-
+                    // add chain handler
+                   ch.pipeline();
                 }
             });
 
