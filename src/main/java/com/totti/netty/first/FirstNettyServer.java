@@ -21,6 +21,13 @@ public class FirstNettyServer {
             // 3.
             serverBootstrap.group(bossGroup, workerGroup);
             serverBootstrap.channel(NioServerSocketChannel.class);
+            serverBootstrap.childHandler(new ChannelInitializer<SocketChannel>() {
+                @Override
+                protected void initChannel(SocketChannel ch) throws Exception {
+                    // add chain handler
+                    ch.pipeline().addLast("handler", new FirstNettyServerHandler());
+                }
+            });
 
             // I found there are two options, so why?
             // but childOption is that after acceptor accepted the channel
@@ -29,18 +36,10 @@ public class FirstNettyServer {
             serverBootstrap.option(ChannelOption.SO_BACKLOG, 128);
             serverBootstrap.childOption(ChannelOption.SO_KEEPALIVE, true);
 
-            serverBootstrap.childHandler(new ChannelInitializer<SocketChannel>() {
-                @Override
-                protected void initChannel(SocketChannel ch) throws Exception {
-                    // add chain handler
-                   ch.pipeline();
-                }
-            });
+            ChannelFuture channelFuture = serverBootstrap.bind(7000).sync();
+            channelFuture.channel().closeFuture().sync();
 
-            ChannelFuture channelFuture = serverBootstrap.bind(9000).sync();
-            channelFuture.channel().closeFuture();
-
-        } catch (InterruptedException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         } finally {
             bossGroup.shutdownGracefully();

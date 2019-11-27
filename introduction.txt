@@ -1,1 +1,4 @@
 Netty is composed of three components - buffer, channel, event model
+
+**ChannelHandlerContext is important interface, its function is that enables a channelHandler to interact with
+its ChannelPipeline
