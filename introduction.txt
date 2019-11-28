@@ -2,3 +2,12 @@ Netty is composed of three components - buffer, channel, event model
 
 **ChannelHandlerContext is important interface, its function is that enables a channelHandler to interact with
 its ChannelPipeline
+
+From FirstNettyServer, we will find a simple httpServer, but I have some questions, like these:
+1. we add HttpServerCodec to be first, but in FirstNettyServerHandler1, we cannot get request body, Why?
+2. About HttpServerCodec, how to parse "stream"?
+3. How to define my own "HttpServerHandler",(HttpRequestHandler, HttpResponseHandler)
+
+**About 1
+1. we need to understand the "ChannelRead" method of ByteToMessageDecoder
+2. we need to understand the decode method of HttpObjectDecoder

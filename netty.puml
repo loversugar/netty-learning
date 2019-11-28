@@ -74,5 +74,9 @@ MessageToMessageDecoder <|-- ProtobufDecoder
 MessageToMessageDecoder <|-- HttpContentDecoder
 ChannelInboundHandlerAdapter <|-- ByteToMessageDecoder
 
+CombinedChannelDuplexHandler <|-- HttpServerCodec
+ChannelDuplexHandler <|-- CombinedChannelDuplexHandler
+ChannelInboundHandlerAdapter <|-- ChannelDuplexHandler
+ChannelOutboundHandler <|.. ChannelDuplexHandler
 
 @enduml
