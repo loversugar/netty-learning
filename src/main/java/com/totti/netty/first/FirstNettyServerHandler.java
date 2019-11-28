@@ -2,14 +2,13 @@ package com.totti.netty.first;
 
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
-import io.netty.handler.codec.http.HttpMessage;
+import io.netty.channel.SimpleChannelInboundHandler;
 
-public class FirstNettyServerHandler extends ChannelInboundHandlerAdapter {
+public class FirstNettyServerHandler extends SimpleChannelInboundHandler<String> {
+
 
     @Override
-    public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
+    protected void channelRead0(ChannelHandlerContext ctx, String msg) throws Exception {
         System.out.println(msg);
-        System.out.println(ctx);
     }
-
 }

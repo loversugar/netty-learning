@@ -1,5 +1,6 @@
 package com.totti.netty.first;
 
+import com.sun.net.httpserver.HttpServer;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelInitializer;
@@ -8,6 +9,7 @@ import io.netty.channel.EventLoopGroup;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
+import io.netty.handler.codec.http.HttpServerCodec;
 
 public class FirstNettyServer {
     public static void main(String[] args) {
@@ -25,7 +27,10 @@ public class FirstNettyServer {
                 @Override
                 protected void initChannel(SocketChannel ch) throws Exception {
                     // add chain handler
-                    ch.pipeline().addLast("handler", new FirstNettyServerHandler());
+//                    ch.pipeline().addLast("handler", new FirstNettyServerHandler());
+                    ch.pipeline().addLast("handler", new HttpServerCodec());
+                    ch.pipeline().addLast("handler1", new FirstNettyServerHandler1());
+
                 }
             });
 
