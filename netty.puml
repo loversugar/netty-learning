@@ -49,7 +49,16 @@ interface ChannelInboundHandler {
     +channelWritabilityChanged()
 }
 class ChannelOutboundHandlerAdapter
+
 class ChannelInboundHandlerAdapter
+class SimpleChannelInboundHandler
+abstract class MessageToMessageDecoder
+class StringDecoder
+class ProtobufDecoder
+class HttpContentDecoder
+abstract class ByteToMessageDecoder
+
+note right of ChannelInboundHandlerAdapter: In general, we need to implement this or the \n children of this class to deal with our business
 
 ChannelHandler <|.. ChannelHandlerAdapter
 ChannelHandler <|-- ChannelOutboundHandler
@@ -58,5 +67,12 @@ ChannelHandlerAdapter <|-- ChannelOutboundHandlerAdapter
 ChannelHandlerAdapter <|-- ChannelInboundHandlerAdapter
 ChannelInboundHandler <|.. ChannelInboundHandlerAdapter
 ChannelOutboundHandler <|.. ChannelOutboundHandlerAdapter
+ChannelInboundHandlerAdapter <|-- SimpleChannelInboundHandler
+ChannelInboundHandlerAdapter <|-- MessageToMessageDecoder
+MessageToMessageDecoder <|-- StringDecoder
+MessageToMessageDecoder <|-- ProtobufDecoder
+MessageToMessageDecoder <|-- HttpContentDecoder
+ChannelInboundHandlerAdapter <|-- ByteToMessageDecoder
+
 
 @enduml
