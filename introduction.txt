@@ -11,3 +11,13 @@ From FirstNettyServer, we will find a simple httpServer, but I have some questio
 **About 1
 1. we need to understand the "ChannelRead" method of ByteToMessageDecoder
 2. we need to understand the decode method of HttpObjectDecoder
+
+ByteToMessageDecoder just simple deal with data
+
+But the decode method of HttpObjectDecoder is that simple parse data except request content I guess in HttpObjectDecoder,
+Specific content we have to dig into it.
+
+Because the decode method of HttpObjectDecoder didn't deal with request content, so we have to create "HttpObjectAggregator",
+this class parsed request content, let we dig it how to handle request stream.
+Now I have new some questions, In my own handler, I find the Object should be DefaultHttpMessage and the status of decodeResult
+is success, otherwise in MessageToMessageDecoder and MessageAggregator , the status of msg is not successful.

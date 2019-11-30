@@ -9,6 +9,7 @@ import io.netty.channel.EventLoopGroup;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
+import io.netty.handler.codec.http.HttpObjectAggregator;
 import io.netty.handler.codec.http.HttpServerCodec;
 
 public class FirstNettyServer {
@@ -29,7 +30,8 @@ public class FirstNettyServer {
                     // add chain handler
 //                    ch.pipeline().addLast("handler", new FirstNettyServerHandler());
                     ch.pipeline().addLast("handler", new HttpServerCodec());
-                    ch.pipeline().addLast("handler1", new FirstNettyServerHandler1());
+//                    ch.pipeline().addLast("handler1", new HttpObjectAggregator(Short.MAX_VALUE));
+                    ch.pipeline().addLast("handler2", new FirstNettyServerHandler1());
 
                 }
             });
