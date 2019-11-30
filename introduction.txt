@@ -19,5 +19,5 @@ Specific content we have to dig into it.
 
 Because the decode method of HttpObjectDecoder didn't deal with request content, so we have to create "HttpObjectAggregator",
 this class parsed request content, let we dig it how to handle request stream.
-Now I have new some questions, In my own handler, I find the Object should be DefaultHttpMessage and the status of decodeResult
-is success, otherwise in MessageToMessageDecoder and MessageAggregator , the status of msg is not successful.
+Now I have two ways, first I dig it HttpServerCodec why it didn't parse requestContext and just parse other data except requestContext,
+second I dig HttpObjectDecoder how it parsed requestContext,
