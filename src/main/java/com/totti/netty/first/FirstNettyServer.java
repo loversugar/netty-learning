@@ -1,6 +1,5 @@
 package com.totti.netty.first;
 
-import com.sun.net.httpserver.HttpServer;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelInitializer;
@@ -30,7 +29,7 @@ public class FirstNettyServer {
                     // add chain handler
 //                    ch.pipeline().addLast("handler", new FirstNettyServerHandler());
                     ch.pipeline().addLast("handler", new HttpServerCodec());
-//                    ch.pipeline().addLast("handler1", new HttpObjectAggregator(Short.MAX_VALUE));
+                    ch.pipeline().addLast("handler1", new HttpObjectAggregator(Short.MAX_VALUE));
                     ch.pipeline().addLast("handler2", new FirstNettyServerHandler1());
 
                 }

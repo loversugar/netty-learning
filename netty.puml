@@ -56,7 +56,13 @@ abstract class MessageToMessageDecoder
 class StringDecoder
 class ProtobufDecoder
 class HttpContentDecoder
+
 abstract class ByteToMessageDecoder
+abstract class HttpObjectDecoder
+class HttpServerCodec
+
+HttpObjectDecoder <|-- HttpServerCodec
+ByteToMessageDecoder <|-- HttpObjectDecoder
 
 note right of ChannelInboundHandlerAdapter: In general, we need to implement this or the \n children of this class to deal with our business
 
