@@ -24,3 +24,6 @@ second I dig HttpObjectAggregator how it parsed requestContext,
 
 So I wanna understand the HttpObjectAggregator, but I have to figure out how the decode method of MessageAggregator works first.
 ||||||  I continue to study source, or study the process of stream of TCP.
+
+But I still decide to figure out ByteToMessageDecode
+Question: In the method of ChannelRead, why have multiple ByteBufs?
