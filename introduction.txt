@@ -27,3 +27,8 @@ So I wanna understand the HttpObjectAggregator, but I have to figure out how the
 
 But I still decide to figure out ByteToMessageDecode
 Question: In the method of ChannelRead, why have multiple ByteBufs?
+three classes 1, ByteToMessageDecoder HttpObjectDecoder HttpServerCodec
+HttpObjectDecoder$HeaderParser -->parse 807 byte.foreachBytes
+AbstractByteBuf --> foreachByte 1330
+AbstractByteBuf --> foreachByteasc0 1350
+HttpObjectDecoder$HeaderParser --> process 839
