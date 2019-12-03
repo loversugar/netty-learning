@@ -27,10 +27,11 @@ public class FirstNettyServer {
                 @Override
                 protected void initChannel(SocketChannel ch) throws Exception {
                     // add chain handler
+                    ch.pipeline().addLast(new CustomizedHandler());
 //                    ch.pipeline().addLast("handler", new FirstNettyServerHandler());
-                    ch.pipeline().addLast("handler", new HttpServerCodec());
-                    ch.pipeline().addLast("handler1", new HttpObjectAggregator(Short.MAX_VALUE));
-                    ch.pipeline().addLast("handler2", new FirstNettyServerHandler1());
+//                    ch.pipeline().addLast("handler", new HttpServerCodec());
+//                    ch.pipeline().addLast("handler1", new HttpObjectAggregator(Short.MAX_VALUE));
+//                    ch.pipeline().addLast("handler2", new FirstNettyServerHandler1());
 
                 }
             });
