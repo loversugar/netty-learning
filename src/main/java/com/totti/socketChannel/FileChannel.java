@@ -1,7 +1,5 @@
 package com.totti.socketChannel;
 
-import org.omg.IOP.ExceptionDetailMessage;
-
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.RandomAccessFile;
