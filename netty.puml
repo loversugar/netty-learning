@@ -1,10 +1,14 @@
 @startuml
 interface EventLoopGroup
+abstract MultithreadEventLoopGroup
+
+note left of MultithreadEventLoopGroup: implementations which is used for NIO {@link Selector} based {@link Channel}s
 class NioEventLoopGroup {
 }
 
 note left of NioEventLoopGroup: this is base class
-EventLoopGroup <|-- NioEventLoopGroup
+EventLoopGroup <|.. MultithreadEventLoopGroup
+MultithreadEventLoopGroup <|-- NioEventLoopGroup
 
 abstract AbstractBootstrap {
     -options Map<ChannelOptions<?>, Object>;
