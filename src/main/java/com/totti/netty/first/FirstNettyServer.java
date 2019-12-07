@@ -9,33 +9,28 @@ import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
 import io.netty.handler.codec.http.HttpObjectAggregator;
+import io.netty.handler.codec.http.HttpResponseEncoder;
 import io.netty.handler.codec.http.HttpServerCodec;
 
 public class FirstNettyServer {
     public static void main(String[] args) {
         // 1.first need two event loop - boss, worker
-        EventLoopGroup bossGroup = new NioEventLoopGroup();
+        EventLoopGroup bossGroup = new NioEventLoopGroup(1);
         EventLoopGroup workerGroup = new NioEventLoopGroup();
 
         try {
             // 2. create start-up class, for the ease of to manage channel
             ServerBootstrap serverBootstrap = new ServerBootstrap();
-            // 3.
+            // 3. init params
             serverBootstrap.group(bossGroup, workerGroup);
             serverBootstrap.channel(NioServerSocketChannel.class);
             serverBootstrap.childHandler(new ChannelInitializer<SocketChannel>() {
                 @Override
                 protected void initChannel(SocketChannel ch) throws Exception {
                     // add chain handler
-                    ch.pipeline().addLast(new CustomizedHandler1());
-                    ch.pipeline().addLast(new CustomizedResponseHandler());
-                    ch.pipeline().addLast(new CustomizedHandler2());
-
-//                    ch.pipeline().addLast("handler", new FirstNettyServerHandler());
-//                    ch.pipeline().addLast("handler", new HttpServerCodec());
-//                    ch.pipeline().addLast("handler1", new HttpObjectAggregator(Short.MAX_VALUE));
-//                    ch.pipeline().addLast("handler2", new FirstNettyServerHandler1());
-
+                    ch.pipeline().addLast(new HttpResponseEncoder());
+                    ch.pipeline().addLast(new FirstNettyResponseHandler());
+                    ch.pipeline().addLast(new FirstNettyRequestHandler());
                 }
             });
 
