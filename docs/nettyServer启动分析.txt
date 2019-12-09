@@ -1,6 +1,9 @@
 参考官网给出的例子，然后写了一个小demo，开始对这个demo的启动流程开始分析：
-1.按照FirstNettyServer中，我们首先创建了一个boss线程组和一个work线程组，默认情况下我们在初始化NioEventLoopGroup，并且不设置它构造方法呢中的线程数量，默认是可以通过查看MultithreadEventLoopGroup中的DEFAULT_EVENT_LOOP_THREADS可以看到，如果参数为０（也是就是不设置的情况下），数量为NettyRuntime.availableProcessors() * 2，换句话说也就是cpu核数*2
-2.现在出现几个问题，1)为什么我们要创建两个线程组。2)如果简单了解过netty的，应该知道，我们在创建boss线程，一般设置的thread的数量为１，如果设置为其他数量会有什么影响呢？以及boss线程组和work线程组又是干什么的呢？
+1.按照FirstNettyServer中，我们首先创建了一个boss线程组和一个work线程组，默认情况下我们在初始化NioEventLoopGroup，并且不设置它构造方法呢中的线程
+数量，默认是可以通过查看MultithreadEventLoopGroup中的DEFAULT_EVENT_LOOP_THREADS可以看到，如果参数为０（也是就是不设置的情况下），数量为
+NettyRuntime.availableProcessors() * 2，换句话说也就是cpu核数*2
+2.现在出现几个问题，1)为什么我们要创建两个线程组。2)如果简单了解过netty的，应该知道，我们在创建boss线程，一般设置的thread的数量为１，如果设置为其他
+数量会有什么影响呢？以及boss线程组和work线程组又是干什么的呢？
 我们首先进入serverBootstrap的bind方法，来一层一层进入，最终我们会找到AbstractBootstrap中的doBind方法，它里面有一个initAndRegister,
 我们进入之后会看到里面的方法内容大致是1)创建NioServerSocketChannel(可以打断点查看).2)对channel进行初始化.3)注册到group中.4)返回channelFuture
 
