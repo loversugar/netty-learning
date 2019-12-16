@@ -20,3 +20,9 @@ MultithreadLoopGroup中的register方法，内部是调用next().register(channe
 综上所述，对于bossGroup方法会创建NioServerChannel，并且将该channel注册到boss线程组的一个线程上，因为chooser调用的next方法，返回的
 是EventExcutors中的一个值，也即是单个NioEventLoop.
 
+接下来看下如何对work线程组进行处理的。
+看到AbstractBootstrap中的initAndRegister()方法中的init()，这个init()实际使用的是ServerBootstrap中的init()方法，首先明确一下init中
+传递的channel是，在需要注册到boss线程组中的channel.接下来，这个方法内部第一行，将我们在serverBootstrap.option()，方法中传递的值，
+放入到channel的配置中去，其次下面的setAttributes方法也是一样。其次获取channel的pipeline,pipeline包含一系列的inbound和outbound的处
+理，然后通过p.addLast(),将ServerBootstrapAcceptor这个handler放到pipeline中,在ServerBoostrapAcceptor中的channelRead中，在work线程组
+中注册channel,该channel属于child的，并且将我们初始话的那些handler方法（FirstNettyServer）中注册的放入到child的pipeline中。
