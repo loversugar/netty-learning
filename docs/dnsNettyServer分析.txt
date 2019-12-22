@@ -1,0 +1,1 @@
+测试方法：使用nslookup -port(指定本地端口)，　然后输入www.baidu.com进行测试
