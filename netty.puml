@@ -16,7 +16,10 @@ abstract AbstractBootstrap {
 class ServerBootstrap {
     -childOptions Map<ChannelOptions<?>, Object>;
 }
+class Bootstrap {
+}
 AbstractBootstrap <|-- ServerBootstrap
+AbstractBootstrap <|-- Bootstrap
 
 interface Channel {
     +pipeline()

@@ -4,7 +4,12 @@ import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
-import io.netty.handler.codec.dns.*;
+import io.netty.handler.codec.dns.DatagramDnsQuery;
+import io.netty.handler.codec.dns.DatagramDnsResponse;
+import io.netty.handler.codec.dns.DefaultDnsQuestion;
+import io.netty.handler.codec.dns.DefaultDnsRawRecord;
+import io.netty.handler.codec.dns.DnsRecordType;
+import io.netty.handler.codec.dns.DnsSection;
 
 import java.util.HashMap;
 import java.util.Map;

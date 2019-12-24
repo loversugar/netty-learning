@@ -7,9 +7,7 @@ import io.netty.channel.ChannelInitializer;
 import io.netty.channel.ChannelOption;
 import io.netty.channel.EventLoopGroup;
 import io.netty.channel.nio.NioEventLoopGroup;
-import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioDatagramChannel;
-import io.netty.channel.socket.nio.NioServerSocketChannel;
 import io.netty.handler.codec.dns.DatagramDnsQueryDecoder;
 import io.netty.handler.codec.dns.DatagramDnsResponseEncoder;
 
@@ -18,8 +16,8 @@ public class DnsNettyServer {
         try {
             EventLoopGroup workGroup = new NioEventLoopGroup();
 
-            Bootstrap serverBootstrap = new Bootstrap();
-            serverBootstrap.group(workGroup)
+            Bootstrap bootstrap = new Bootstrap();
+            bootstrap.group(workGroup)
                     .option(ChannelOption.SO_BROADCAST, true)
                     .channel(NioDatagramChannel.class)
                     .handler(new ChannelInitializer<NioDatagramChannel>() {
@@ -31,7 +29,7 @@ public class DnsNettyServer {
                         }
                     });
 
-            ChannelFuture future = serverBootstrap.bind(7100).sync();
+            ChannelFuture future = bootstrap.bind(7100).sync();
             future.channel().closeFuture().sync();
         } catch (InterruptedException e) {
             e.printStackTrace();
