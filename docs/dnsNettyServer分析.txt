@@ -1,1 +1,17 @@
 测试方法：使用nslookup -port(指定本地端口)，　然后输入www.baidu.com进行测试
+UDP(User Datagram Protocol):数据格式
+按照https://tools.ietf.org/html/rfc768，格式如下
+0     7 8   15,16          31
+----------------------------
+|  Source    |   Destination
+|  Port      |   Port
+----------------------------
+| Length     |   Checksum
+|            |
+---------------------------
+|    Data octets
+|
+-------------------------------
+按照上图，第一行０到１５位是源端口，１６到３１位是目的端口，
+第二行１６位的ｕｄｐ长度，１６位的校验和，
+最后一行数据
