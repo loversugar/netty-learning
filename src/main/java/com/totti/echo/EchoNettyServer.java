@@ -12,34 +12,27 @@ import io.netty.handler.logging.LogLevel;
 import io.netty.handler.logging.LoggingHandler;
 
 public class EchoNettyServer {
-    public static void main(String[] args)
-        throws InterruptedException {
-        EventLoopGroup bossGroup = new NioEventLoopGroup(1);
-        EventLoopGroup workGroup = new NioEventLoopGroup();
-        
-        try {
-            ServerBootstrap s = new ServerBootstrap();
-            s.group(bossGroup, workGroup)
-                .channel(NioServerSocketChannel.class)
-                .option(ChannelOption.SO_BACKLOG, 100)
-                .handler(new LoggingHandler(LogLevel.INFO))
-                .childHandler(new ChannelInitializer<SocketChannel>()
-                {
-                    @Override
-                    protected void initChannel(SocketChannel ch)
-                        throws Exception {
-                        ch.pipeline().addLast(new EchoNettyServerHandler());
-                    }
-                });
-            
-            ChannelFuture f = s.bind(8080).sync();
-            
-            f.channel().closeFuture().sync();
-        }
-        finally {
-            bossGroup.shutdownGracefully();
-            workGroup.shutdownGracefully();
-        }
-        
+  public static void main(String[] args) throws InterruptedException {
+    EventLoopGroup bossGroup = new NioEventLoopGroup(1);
+    EventLoopGroup workGroup = new NioEventLoopGroup();
+
+    try {
+      ServerBootstrap s = new ServerBootstrap();
+      s.group(bossGroup, workGroup).channel(NioServerSocketChannel.class).option(ChannelOption.SO_BACKLOG, 100)
+          .handler(new LoggingHandler(LogLevel.INFO)).childHandler(new ChannelInitializer<SocketChannel>() {
+            @Override
+            protected void initChannel(SocketChannel ch) throws Exception {
+              ch.pipeline().addLast(new EchoNettyServerHandler());
+            }
+          });
+
+      ChannelFuture f = s.bind(8080).sync();
+
+      f.channel().closeFuture().sync();
+    } finally {
+      bossGroup.shutdownGracefully();
+      workGroup.shutdownGracefully();
     }
+
+  }
 }
