@@ -51,7 +51,9 @@ public class NioReactorServer {
                         socketChannel.configureBlocking(false);
                         socketChannel.register(selector, SelectionKey.OP_READ);
                     } else if (selectionKey.isReadable()) {
-                        selectionKey.cancel();
+                        System.out.println("reading......");
+                        System.out.println("selectionKey....." + selectionKey.interestOps());
+                        // selectionKey.cancel();
                         executorService.submit(() -> {
                             try {
                                 read(selectionKey);

@@ -56,10 +56,10 @@ public class BasicHandler implements Runnable {
      * 从通道读取字节
      */
     protected void read() throws IOException {
-        System.out.println("read......");
         input.clear(); // 清空接收缓冲区
         int n = socket.read(input);
         if (inputIsComplete(n)) {// 如果读取了完整的数据
+
             process();
             // 待发送的数据已经放入发送缓冲区中
 
@@ -108,6 +108,7 @@ public class BasicHandler implements Runnable {
      *             用户输入 ctrl+c 主动关闭
      */
     protected void process() throws EOFException {
+        System.out.println("get data is " + this.request.toString());
         if (state == CLOSED) {
             throw new EOFException();
         } else if (state == SENDING) {
