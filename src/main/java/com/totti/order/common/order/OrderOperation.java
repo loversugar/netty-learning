@@ -15,7 +15,7 @@ public class OrderOperation extends Operation {
     @Override
     public OperationResult execute() {
         System.out.println("");
-        OrderOperationResult result = new OrderOperationResult();
+        OrderOperationResult result = new OrderOperationResult(tableId, dish, true);
         return result;
     }
 }

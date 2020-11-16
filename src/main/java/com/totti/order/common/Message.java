@@ -1,68 +1,53 @@
 package com.totti.order.common;
 
 import java.nio.charset.Charset;
-import java.nio.charset.StandardCharsets;
 
 import com.totti.order.common.util.JsonUtils;
 
 import io.netty.buffer.ByteBuf;
 
 public abstract class Message<T extends MessageBody> {
-    private static final Charset UTF_8 = StandardCharsets.UTF_8;
+    private MessageHeader messageHeader;
+    private T messageBody;
 
-    private MessageHeader header;
-    private T body;
-
-    /**
-     * 编码
-     * 
-     * @param buf
-     */
-    public void encode(ByteBuf buf) {
-        buf.writeInt(header.getVersion());
-        buf.writeInt(header.getOpCode());
-        buf.writeLong(header.getRequestId());
-        // body
-        buf.writeBytes(JsonUtils.toJson(body).getBytes(UTF_8));
+    public T getMessageBody() {
+        return messageBody;
     }
 
-    /**
-     * 解码
-     * 
-     * @param msg
-     */
+    public void setMessageBody(T messageBody) {
+        this.messageBody = messageBody;
+    }
+
+    public void encode(ByteBuf byteBuf) {
+        byteBuf.writeInt(messageHeader.getVersion());
+        byteBuf.writeLong(messageHeader.getStreamId());
+        byteBuf.writeInt(messageHeader.getOpCode());
+        byteBuf.writeBytes(JsonUtils.toJson(messageBody).getBytes());
+    }
+
+    public abstract Class<T> getMessageBodyDecodeClass(int opcode);
+
     public void decode(ByteBuf msg) {
         int version = msg.readInt();
+        long streamId = msg.readLong();
         int opCode = msg.readInt();
-        long requestId = msg.readLong();
 
         MessageHeader messageHeader = new MessageHeader();
         messageHeader.setVersion(version);
         messageHeader.setOpCode(opCode);
-        messageHeader.setRequestId(requestId);
+        messageHeader.setStreamId(streamId);
+        this.messageHeader = messageHeader;
 
-        Class<T> clz = getMessageBodyDecodeClass(opCode);
-        T obj = JsonUtils.parseObject(msg.toString(UTF_8), clz);
-
-        this.header = messageHeader;
-        this.body = obj;
+        Class<T> bodyClazz = getMessageBodyDecodeClass(opCode);
+        T body = JsonUtils.fromJson(msg.toString(Charset.forName("UTF-8")), bodyClazz);
+        this.messageBody = body;
     }
 
-    public MessageHeader getHeader() {
-        return header;
+    public MessageHeader getMessageHeader() {
+        return messageHeader;
     }
 
-    public void setHeader(MessageHeader header) {
-        this.header = header;
+    public void setMessageHeader(MessageHeader messageHeader) {
+        this.messageHeader = messageHeader;
     }
-
-    public T getBody() {
-        return body;
-    }
-
-    public void setBody(T body) {
-        this.body = body;
-    }
-
-    protected abstract Class<T> getMessageBodyDecodeClass(int opCode);
 }

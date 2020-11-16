@@ -1,17 +1,9 @@
 package com.totti.order.common;
 
 public class MessageHeader {
-    /**
-     * 版本号
-     */
     private int version = 1;
-
-    /**
-     * 业务类型
-     */
     private int opCode;
-
-    private Long requestId;
+    private long streamId;
 
     public int getVersion() {
         return version;
@@ -29,11 +21,11 @@ public class MessageHeader {
         this.opCode = opCode;
     }
 
-    public Long getRequestId() {
-        return requestId;
+    public long getStreamId() {
+        return streamId;
     }
 
-    public void setRequestId(Long requestId) {
-        this.requestId = requestId;
+    public void setStreamId(long streamId) {
+        this.streamId = streamId;
     }
 }
