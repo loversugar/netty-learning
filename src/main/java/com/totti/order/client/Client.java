@@ -8,7 +8,7 @@ import com.totti.order.client.codec.OrderProtocolDecoder;
 import com.totti.order.client.codec.OrderProtocolEncoder;
 import com.totti.order.common.RequestMessage;
 import com.totti.order.common.order.OrderOperation;
-import com.totti.order.common.util.Idutil;
+import com.totti.order.common.util.IdUtil;
 
 import io.netty.bootstrap.Bootstrap;
 import io.netty.channel.ChannelFuture;
@@ -41,7 +41,7 @@ public class Client {
 
         channelFuture.sync();
 
-        RequestMessage requestMessage = new RequestMessage(Idutil.nextId(), new OrderOperation(1001, "tudou"));
+        RequestMessage requestMessage = new RequestMessage(IdUtil.nextId(), new OrderOperation(1001, "tudou"));
         channelFuture.channel().writeAndFlush(requestMessage);
 
         channelFuture.channel().closeFuture().get();

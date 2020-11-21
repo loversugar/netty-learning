@@ -2,10 +2,10 @@ package com.totti.order.common.util;
 
 import java.util.concurrent.atomic.AtomicLong;
 
-public class Idutil {
+public class IdUtil {
     private static final AtomicLong IDX = new AtomicLong();
 
-    private Idutil() {
+    private IdUtil() {
 
     }
 

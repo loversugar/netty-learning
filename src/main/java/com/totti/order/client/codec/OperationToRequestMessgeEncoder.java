@@ -4,7 +4,7 @@ import java.util.List;
 
 import com.totti.order.common.Operation;
 import com.totti.order.common.RequestMessage;
-import com.totti.order.common.util.Idutil;
+import com.totti.order.common.util.IdUtil;
 
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.handler.codec.MessageToMessageEncoder;
@@ -14,7 +14,7 @@ public class OperationToRequestMessgeEncoder extends MessageToMessageEncoder<Ope
     protected void encode(ChannelHandlerContext channelHandlerContext, Operation operation, List<Object> list)
         throws Exception {
 
-        RequestMessage requestMessage = new RequestMessage(Idutil.nextId(), operation);
+        RequestMessage requestMessage = new RequestMessage(IdUtil.nextId(), operation);
         list.add(requestMessage);
     }
 }
