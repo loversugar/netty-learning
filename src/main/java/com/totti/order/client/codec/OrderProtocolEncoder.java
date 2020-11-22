@@ -16,6 +16,6 @@ public class OrderProtocolEncoder extends MessageToMessageEncoder<ResponseMessag
         ByteBuf buffer = channelHandlerContext.alloc().buffer();
         responseMessage.encode(buffer);
 
-        channelHandlerContext.writeAndFlush(buffer);
+        list.add(buffer);
     }
 }

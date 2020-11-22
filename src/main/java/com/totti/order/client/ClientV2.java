@@ -25,7 +25,9 @@ import io.netty.handler.logging.LogLevel;
 import io.netty.handler.logging.LoggingHandler;
 
 public class ClientV2 {
+
     public static void main(String[] args) throws InterruptedException, ExecutionException {
+
         Bootstrap bootstrap = new Bootstrap();
         bootstrap.channel(NioSocketChannel.class);
 
@@ -67,12 +69,16 @@ public class ClientV2 {
             channelFuture.channel().writeAndFlush(requestMessage);
 
             OperationResult operationResult = operationResultFuture.get();
+            System.out.println("================");
 
             System.out.println(operationResult);
+
+            System.out.println("11111111111111111");
 
             channelFuture.channel().closeFuture().sync();
         } finally {
             group.shutdownGracefully();
         }
     }
+
 }
