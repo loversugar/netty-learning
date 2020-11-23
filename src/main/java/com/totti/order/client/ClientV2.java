@@ -2,7 +2,6 @@ package com.totti.order.client;
 
 import java.util.concurrent.ExecutionException;
 
-import com.totti.order.client.codec.OperationToRequestMessgeEncoder;
 import com.totti.order.client.codec.OrderFrameDecoder;
 import com.totti.order.client.codec.OrderFrameEncoder;
 import com.totti.order.client.codec.OrderProtocolDecoder;

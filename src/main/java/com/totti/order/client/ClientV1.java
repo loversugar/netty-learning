@@ -2,7 +2,7 @@ package com.totti.order.client;
 
 import java.util.concurrent.ExecutionException;
 
-import com.totti.order.client.codec.OperationToRequestMessgeEncoder;
+import com.totti.order.client.codec.OperationToRequestMessageEncoder;
 import com.totti.order.client.codec.OrderFrameDecoder;
 import com.totti.order.client.codec.OrderFrameEncoder;
 import com.totti.order.client.codec.OrderProtocolDecoder;
@@ -33,7 +33,7 @@ public class ClientV1 {
                 pipeline.addLast(new OrderProtocolEncoder());
                 pipeline.addLast(new OrderProtocolDecoder());
 
-                pipeline.addLast(new OperationToRequestMessgeEncoder());
+                pipeline.addLast(new OperationToRequestMessageEncoder());
 
                 pipeline.addLast(new LoggingHandler(LogLevel.INFO));
             }

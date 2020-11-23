@@ -9,7 +9,7 @@ import com.totti.order.common.util.IdUtil;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.handler.codec.MessageToMessageEncoder;
 
-public class OperationToRequestMessgeEncoder extends MessageToMessageEncoder<Operation> {
+public class OperationToRequestMessageEncoder extends MessageToMessageEncoder<Operation> {
     @Override
     protected void encode(ChannelHandlerContext channelHandlerContext, Operation operation, List<Object> list)
         throws Exception {
