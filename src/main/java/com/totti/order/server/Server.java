@@ -11,6 +11,7 @@ import com.totti.order.server.codec.handler.OrderServerProcessHandler;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelInitializer;
+import io.netty.channel.ChannelOption;
 import io.netty.channel.ChannelPipeline;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
@@ -24,6 +25,8 @@ public class Server {
         serverBootstrap.channel(NioServerSocketChannel.class);
         serverBootstrap.group(new NioEventLoopGroup());
         serverBootstrap.handler(new LoggingHandler(LogLevel.INFO));
+        serverBootstrap.childOption(ChannelOption.TCP_NODELAY, true);
+        serverBootstrap.option(ChannelOption.SO_BACKLOG, 1024);
 
         serverBootstrap.childHandler(new ChannelInitializer<NioSocketChannel>() {
             @Override

@@ -13,6 +13,8 @@ public class OrderProtocolEncoder extends MessageToMessageEncoder<RequestMessage
     @Override
     protected void encode(ChannelHandlerContext channelHandlerContext, RequestMessage requestMessage, List<Object> list)
         throws Exception {
+        //
+        // ByteBuf buffer1 = ByteBufAllocator.DEFAULT.buffer();
         ByteBuf buffer = channelHandlerContext.alloc().buffer();
         requestMessage.encode(buffer);
 
