@@ -2,6 +2,8 @@ package com.totti.order.client;
 
 import java.util.concurrent.ExecutionException;
 
+import org.apache.log4j.Logger;
+
 import com.totti.order.client.codec.OperationToRequestMessageEncoder;
 import com.totti.order.client.codec.OrderFrameDecoder;
 import com.totti.order.client.codec.OrderFrameEncoder;
@@ -25,6 +27,7 @@ import io.netty.handler.logging.LogLevel;
 import io.netty.handler.logging.LoggingHandler;
 
 public class ClientV2 {
+    private static Logger logger = Logger.getLogger(ClientV2.class);
 
     public static void main(String[] args) throws InterruptedException, ExecutionException {
 
@@ -69,11 +72,11 @@ public class ClientV2 {
             channelFuture.channel().writeAndFlush(requestMessage);
 
             OperationResult operationResult = operationResultFuture.get();
-            System.out.println("================");
+            logger.info("================");
 
-            System.out.println(operationResult);
+            logger.info(operationResult);
 
-            System.out.println("11111111111111111");
+            logger.info("11111111111111111");
 
             channelFuture.channel().closeFuture().sync();
         } finally {

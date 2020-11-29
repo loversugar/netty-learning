@@ -13,18 +13,23 @@ import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelInitializer;
 import io.netty.channel.ChannelOption;
 import io.netty.channel.ChannelPipeline;
+import io.netty.channel.EventLoopGroup;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
 import io.netty.channel.socket.nio.NioSocketChannel;
 import io.netty.handler.logging.LogLevel;
 import io.netty.handler.logging.LoggingHandler;
+import io.netty.util.concurrent.DefaultThreadFactory;
 
 public class Server {
     public static void main(String[] args) throws InterruptedException, ExecutionException {
+        EventLoopGroup bossGroup = new NioEventLoopGroup(0, new DefaultThreadFactory("boss"));
+        EventLoopGroup workerGroup = new NioEventLoopGroup(0, new DefaultThreadFactory("worker"));
+
         ServerBootstrap serverBootstrap = new ServerBootstrap();
         serverBootstrap.channel(NioServerSocketChannel.class);
-        serverBootstrap.group(new NioEventLoopGroup());
-        serverBootstrap.handler(new LoggingHandler(LogLevel.INFO));
+        serverBootstrap.group(bossGroup, workerGroup);
+        serverBootstrap.handler(new LoggingHandler(LogLevel.DEBUG));
         serverBootstrap.childOption(ChannelOption.TCP_NODELAY, true);
         serverBootstrap.option(ChannelOption.SO_BACKLOG, 1024);
 
@@ -32,8 +37,8 @@ public class Server {
             @Override
             protected void initChannel(NioSocketChannel ch) throws Exception {
                 ChannelPipeline pipeline = ch.pipeline();
-                pipeline.addLast(new OrderFrameDecoder());
-                pipeline.addLast(new OrderFrameEncoder());
+                pipeline.addLast("frameDecoder", new OrderFrameDecoder());
+                pipeline.addLast("frameEncoder", new OrderFrameEncoder());
                 pipeline.addLast(new OrderProtocolEncoder());
                 pipeline.addLast(new OrderProtocolDecoder());
                 pipeline.addLast(new LoggingHandler(LogLevel.INFO));

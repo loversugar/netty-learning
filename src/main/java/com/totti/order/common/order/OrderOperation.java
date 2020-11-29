@@ -1,9 +1,13 @@
 package com.totti.order.common.order;
 
+import org.apache.log4j.Logger;
+
 import com.totti.order.common.Operation;
 import com.totti.order.common.OperationResult;
 
 public class OrderOperation extends Operation {
+    private static Logger logger = Logger.getLogger(OrderOperation.class);
+
     private int tableId;
     private String dish;
 
@@ -14,7 +18,7 @@ public class OrderOperation extends Operation {
 
     @Override
     public OperationResult execute() {
-        System.out.println("");
+        logger.info("executing.....");
         OrderOperationResult result = new OrderOperationResult(tableId, dish, true);
         return result;
     }
