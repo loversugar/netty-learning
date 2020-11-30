@@ -2,6 +2,7 @@ package com.totti.order.server;
 
 import java.util.concurrent.ExecutionException;
 
+import com.totti.order.server.codec.MetricHandler;
 import com.totti.order.server.codec.OrderFrameDecoder;
 import com.totti.order.server.codec.OrderFrameEncoder;
 import com.totti.order.server.codec.OrderProtocolDecoder;
@@ -26,6 +27,8 @@ public class Server {
         EventLoopGroup bossGroup = new NioEventLoopGroup(0, new DefaultThreadFactory("boss"));
         EventLoopGroup workerGroup = new NioEventLoopGroup(0, new DefaultThreadFactory("worker"));
 
+        MetricHandler metricHandler = new MetricHandler();
+
         ServerBootstrap serverBootstrap = new ServerBootstrap();
         serverBootstrap.channel(NioServerSocketChannel.class);
         serverBootstrap.group(bossGroup, workerGroup);
@@ -37,6 +40,7 @@ public class Server {
             @Override
             protected void initChannel(NioSocketChannel ch) throws Exception {
                 ChannelPipeline pipeline = ch.pipeline();
+                pipeline.addLast("metricHandler", metricHandler);
                 pipeline.addLast("frameDecoder", new OrderFrameDecoder());
                 pipeline.addLast("frameEncoder", new OrderFrameEncoder());
                 pipeline.addLast(new OrderProtocolEncoder());

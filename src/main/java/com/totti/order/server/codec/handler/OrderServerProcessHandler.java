@@ -12,6 +12,7 @@ import io.netty.channel.SimpleChannelInboundHandler;
  * 使用simpleInboundHandler帮助释放ByteBuf
  */
 public class OrderServerProcessHandler extends SimpleChannelInboundHandler<RequestMessage> {
+
     @Override
     protected void channelRead0(ChannelHandlerContext ctx, RequestMessage msg) throws Exception {
         Operation operation = msg.getMessageBody();
