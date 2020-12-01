@@ -21,6 +21,7 @@ import io.netty.channel.socket.nio.NioSocketChannel;
 import io.netty.handler.logging.LogLevel;
 import io.netty.handler.logging.LoggingHandler;
 import io.netty.util.concurrent.DefaultThreadFactory;
+import io.netty.util.concurrent.UnorderedThreadPoolEventExecutor;
 
 public class Server {
     public static void main(String[] args) throws InterruptedException, ExecutionException {
@@ -28,6 +29,9 @@ public class Server {
         EventLoopGroup workerGroup = new NioEventLoopGroup(0, new DefaultThreadFactory("worker"));
 
         MetricHandler metricHandler = new MetricHandler();
+
+        UnorderedThreadPoolEventExecutor unorderedThreadPoolEventExecutor =
+            new UnorderedThreadPoolEventExecutor(10, new DefaultThreadFactory("bussiness"));
 
         ServerBootstrap serverBootstrap = new ServerBootstrap();
         serverBootstrap.channel(NioServerSocketChannel.class);
@@ -46,7 +50,7 @@ public class Server {
                 pipeline.addLast(new OrderProtocolEncoder());
                 pipeline.addLast(new OrderProtocolDecoder());
                 pipeline.addLast(new LoggingHandler(LogLevel.INFO));
-                pipeline.addLast(new OrderServerProcessHandler());
+                pipeline.addLast(unorderedThreadPoolEventExecutor, new OrderServerProcessHandler());
             }
         });
 
