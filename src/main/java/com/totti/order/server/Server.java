@@ -50,6 +50,8 @@ public class Server {
                 pipeline.addLast(new OrderProtocolEncoder());
                 pipeline.addLast(new OrderProtocolDecoder());
                 pipeline.addLast(new LoggingHandler(LogLevel.INFO));
+
+                // 因为该线程池的next()方法返回this，但是NioEventLoopGroup的next()方法返回的是chooser.next()
                 pipeline.addLast(unorderedThreadPoolEventExecutor, new OrderServerProcessHandler());
             }
         });
