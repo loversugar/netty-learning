@@ -18,6 +18,7 @@ import io.netty.channel.EventLoopGroup;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
 import io.netty.channel.socket.nio.NioSocketChannel;
+import io.netty.handler.flush.FlushConsolidationHandler;
 import io.netty.handler.logging.LogLevel;
 import io.netty.handler.logging.LoggingHandler;
 import io.netty.util.concurrent.DefaultThreadFactory;
@@ -50,6 +51,8 @@ public class Server {
                 pipeline.addLast(new OrderProtocolEncoder());
                 pipeline.addLast(new OrderProtocolDecoder());
                 pipeline.addLast(new LoggingHandler(LogLevel.INFO));
+
+                pipeline.addLast(new FlushConsolidationHandler(10, true));
 
                 // 因为该线程池的next()方法返回this，但是NioEventLoopGroup的next()方法返回的是chooser.next()
                 pipeline.addLast(unorderedThreadPoolEventExecutor, new OrderServerProcessHandler());
