@@ -21,6 +21,7 @@ import io.netty.channel.socket.nio.NioSocketChannel;
 import io.netty.handler.flush.FlushConsolidationHandler;
 import io.netty.handler.logging.LogLevel;
 import io.netty.handler.logging.LoggingHandler;
+import io.netty.handler.traffic.GlobalTrafficShapingHandler;
 import io.netty.util.concurrent.DefaultThreadFactory;
 import io.netty.util.concurrent.UnorderedThreadPoolEventExecutor;
 
@@ -28,8 +29,11 @@ public class Server {
     public static void main(String[] args) throws InterruptedException, ExecutionException {
         EventLoopGroup bossGroup = new NioEventLoopGroup(0, new DefaultThreadFactory("boss"));
         EventLoopGroup workerGroup = new NioEventLoopGroup(0, new DefaultThreadFactory("worker"));
+        EventLoopGroup trafficShapingGroup = new NioEventLoopGroup(0, new DefaultThreadFactory("trafficShaping"));
 
         MetricHandler metricHandler = new MetricHandler();
+        GlobalTrafficShapingHandler globalTrafficShapingHandler =
+            new GlobalTrafficShapingHandler(trafficShapingGroup, 10 * 1024 * 1024, 10 * 1024 * 1024);
 
         UnorderedThreadPoolEventExecutor unorderedThreadPoolEventExecutor =
             new UnorderedThreadPoolEventExecutor(10, new DefaultThreadFactory("bussiness"));
@@ -45,11 +49,15 @@ public class Server {
             @Override
             protected void initChannel(NioSocketChannel ch) throws Exception {
                 ChannelPipeline pipeline = ch.pipeline();
+                pipeline.addLast("tsHandler", globalTrafficShapingHandler);
                 pipeline.addLast("metricHandler", metricHandler);
+
                 pipeline.addLast("frameDecoder", new OrderFrameDecoder());
                 pipeline.addLast("frameEncoder", new OrderFrameEncoder());
+
                 pipeline.addLast(new OrderProtocolEncoder());
                 pipeline.addLast(new OrderProtocolDecoder());
+
                 pipeline.addLast(new LoggingHandler(LogLevel.INFO));
 
                 pipeline.addLast(new FlushConsolidationHandler(10, true));
