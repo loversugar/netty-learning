@@ -2,6 +2,8 @@ package com.totti.order.client;
 
 import java.util.concurrent.ExecutionException;
 
+import com.totti.order.client.codec.ClientIdlCheckHandler;
+import com.totti.order.client.codec.KeepaliveHandler;
 import com.totti.order.client.codec.OrderFrameDecoder;
 import com.totti.order.client.codec.OrderFrameEncoder;
 import com.totti.order.client.codec.OrderProtocolDecoder;
@@ -25,14 +27,20 @@ public class Client {
         bootstrap.channel(NioSocketChannel.class);
         bootstrap.group(new NioEventLoopGroup());
 
+        KeepaliveHandler keepaliveHandler = new KeepaliveHandler();
+
         bootstrap.handler(new ChannelInitializer<NioSocketChannel>() {
             @Override
             protected void initChannel(NioSocketChannel ch) throws Exception {
                 ChannelPipeline pipeline = ch.pipeline();
+                pipeline.addLast(new ClientIdlCheckHandler());
+
                 pipeline.addLast(new OrderFrameDecoder());
                 pipeline.addLast(new OrderFrameEncoder());
                 pipeline.addLast(new OrderProtocolEncoder());
                 pipeline.addLast(new OrderProtocolDecoder());
+
+                pipeline.addLast(keepaliveHandler);
                 pipeline.addLast(new LoggingHandler(LogLevel.INFO));
             }
         });

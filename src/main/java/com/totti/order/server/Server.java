@@ -7,6 +7,7 @@ import com.totti.order.server.codec.OrderFrameDecoder;
 import com.totti.order.server.codec.OrderFrameEncoder;
 import com.totti.order.server.codec.OrderProtocolDecoder;
 import com.totti.order.server.codec.OrderProtocolEncoder;
+import com.totti.order.server.codec.ServerIdleCheckHandler;
 import com.totti.order.server.codec.handler.OrderServerProcessHandler;
 
 import io.netty.bootstrap.ServerBootstrap;
@@ -51,6 +52,7 @@ public class Server {
                 ChannelPipeline pipeline = ch.pipeline();
                 pipeline.addLast("tsHandler", globalTrafficShapingHandler);
                 pipeline.addLast("metricHandler", metricHandler);
+                pipeline.addLast("idleCheck", new ServerIdleCheckHandler());
 
                 pipeline.addLast("frameDecoder", new OrderFrameDecoder());
                 pipeline.addLast("frameEncoder", new OrderFrameEncoder());
