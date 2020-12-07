@@ -3,6 +3,8 @@ package com.totti.order.server.codec;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicLong;
 
+import org.apache.log4j.Logger;
+
 import com.codahale.metrics.ConsoleReporter;
 import com.codahale.metrics.Gauge;
 import com.codahale.metrics.MetricRegistry;
@@ -14,6 +16,8 @@ import io.netty.channel.ChannelHandlerContext;
 
 @ChannelHandler.Sharable
 public class MetricHandler extends ChannelDuplexHandler {
+    private static Logger logger = Logger.getLogger(MetricHandler.class);
+
     private AtomicLong totalConnectionNumber = new AtomicLong();
 
     {
@@ -35,8 +39,15 @@ public class MetricHandler extends ChannelDuplexHandler {
 
     @Override
     public void channelActive(ChannelHandlerContext ctx) throws Exception {
+        logger.info("MetricHandler#channelActive......");
         totalConnectionNumber.incrementAndGet();
         super.channelActive(ctx);
+    }
+
+    @Override
+    public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
+        logger.info("MetricHandler#channelRead......");
+        super.channelRead(ctx, msg);
     }
 
     @Override

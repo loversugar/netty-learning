@@ -4,14 +4,12 @@ import java.util.concurrent.TimeUnit;
 
 import org.apache.log4j.Logger;
 
-import com.totti.order.common.order.OrderOperation;
-
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.handler.timeout.IdleStateEvent;
 import io.netty.handler.timeout.IdleStateHandler;
 
 public class ServerIdleCheckHandler extends IdleStateHandler {
-    private static Logger logger = Logger.getLogger(OrderOperation.class);
+    private static Logger logger = Logger.getLogger(ServerIdleCheckHandler.class);
 
     public ServerIdleCheckHandler() {
         super(10, 0, 0, TimeUnit.SECONDS);
@@ -26,5 +24,17 @@ public class ServerIdleCheckHandler extends IdleStateHandler {
         }
 
         super.channelIdle(ctx, evt);
+    }
+
+    @Override
+    public void channelActive(ChannelHandlerContext ctx) throws Exception {
+        logger.info("ServerIdleCheckHandler#channelActive.....");
+        super.channelActive(ctx);
+    }
+
+    @Override
+    public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
+        logger.info("ServerIdleCheckHandler#channelRead.....");
+        super.channelRead(ctx, msg);
     }
 }
