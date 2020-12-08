@@ -9,6 +9,7 @@ import com.totti.order.client.codec.OrderFrameEncoder;
 import com.totti.order.client.codec.OrderProtocolDecoder;
 import com.totti.order.client.codec.OrderProtocolEncoder;
 import com.totti.order.common.RequestMessage;
+import com.totti.order.common.auth.AuthOperation;
 import com.totti.order.common.order.OrderOperation;
 import com.totti.order.common.util.IdUtil;
 
@@ -51,7 +52,10 @@ public class Client {
 
         channelFuture.sync();
 
-        RequestMessage requestMessage = new RequestMessage(IdUtil.nextId(), new OrderOperation(1001, "tudou"));
+        RequestMessage requestMessage = new RequestMessage(IdUtil.nextId(), new AuthOperation("admin", "pwd"));
+        channelFuture.channel().writeAndFlush(requestMessage);
+
+        requestMessage = new RequestMessage(IdUtil.nextId(), new OrderOperation(1001, "tudou"));
         channelFuture.channel().writeAndFlush(requestMessage);
 
         channelFuture.channel().closeFuture().get();

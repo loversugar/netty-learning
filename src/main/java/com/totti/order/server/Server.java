@@ -8,6 +8,7 @@ import com.totti.order.server.codec.OrderFrameEncoder;
 import com.totti.order.server.codec.OrderProtocolDecoder;
 import com.totti.order.server.codec.OrderProtocolEncoder;
 import com.totti.order.server.codec.ServerIdleCheckHandler;
+import com.totti.order.server.codec.handler.AuthHandler;
 import com.totti.order.server.codec.handler.OrderServerProcessHandler;
 
 import io.netty.bootstrap.ServerBootstrap;
@@ -39,6 +40,8 @@ public class Server {
         UnorderedThreadPoolEventExecutor unorderedThreadPoolEventExecutor =
             new UnorderedThreadPoolEventExecutor(10, new DefaultThreadFactory("bussiness"));
 
+        AuthHandler authHandler = new AuthHandler();
+
         ServerBootstrap serverBootstrap = new ServerBootstrap();
         serverBootstrap.channel(NioServerSocketChannel.class);
         serverBootstrap.group(bossGroup, workerGroup);
@@ -63,6 +66,8 @@ public class Server {
                 pipeline.addLast(new LoggingHandler(LogLevel.INFO));
 
                 pipeline.addLast(new FlushConsolidationHandler(10, true));
+
+                pipeline.addLast("authHandler", authHandler);
 
                 // 因为该线程池的next()方法返回this，但是NioEventLoopGroup的next()方法返回的是chooser.next()
                 pipeline.addLast(unorderedThreadPoolEventExecutor, new OrderServerProcessHandler());

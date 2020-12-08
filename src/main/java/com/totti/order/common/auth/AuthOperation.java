@@ -1,7 +1,6 @@
 package com.totti.order.common.auth;
 
 import com.totti.order.common.Operation;
-import com.totti.order.common.OperationResult;
 
 public class AuthOperation extends Operation {
     private final String userName;
@@ -13,7 +12,7 @@ public class AuthOperation extends Operation {
     }
 
     @Override
-    public OperationResult execute() {
+    public AuthOperationResult execute() {
         if ("admin".equalsIgnoreCase(userName)) {
             AuthOperationResult result = new AuthOperationResult(true);
             result.setPassAuth(true);
