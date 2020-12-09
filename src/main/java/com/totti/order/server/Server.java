@@ -1,6 +1,9 @@
 package com.totti.order.server;
 
+import java.security.cert.CertificateException;
 import java.util.concurrent.ExecutionException;
+
+import javax.net.ssl.SSLException;
 
 import com.totti.order.server.codec.MetricHandler;
 import com.totti.order.server.codec.OrderFrameDecoder;
@@ -23,12 +26,17 @@ import io.netty.channel.socket.nio.NioSocketChannel;
 import io.netty.handler.flush.FlushConsolidationHandler;
 import io.netty.handler.logging.LogLevel;
 import io.netty.handler.logging.LoggingHandler;
+import io.netty.handler.ssl.SslContext;
+import io.netty.handler.ssl.SslContextBuilder;
+import io.netty.handler.ssl.SslHandler;
+import io.netty.handler.ssl.util.SelfSignedCertificate;
 import io.netty.handler.traffic.GlobalTrafficShapingHandler;
 import io.netty.util.concurrent.DefaultThreadFactory;
 import io.netty.util.concurrent.UnorderedThreadPoolEventExecutor;
 
 public class Server {
-    public static void main(String[] args) throws InterruptedException, ExecutionException {
+    public static void main(String[] args)
+        throws InterruptedException, ExecutionException, CertificateException, SSLException {
         EventLoopGroup bossGroup = new NioEventLoopGroup(0, new DefaultThreadFactory("boss"));
         EventLoopGroup workerGroup = new NioEventLoopGroup(0, new DefaultThreadFactory("worker"));
         EventLoopGroup trafficShapingGroup = new NioEventLoopGroup(0, new DefaultThreadFactory("trafficShaping"));
@@ -41,6 +49,12 @@ public class Server {
             new UnorderedThreadPoolEventExecutor(10, new DefaultThreadFactory("bussiness"));
 
         AuthHandler authHandler = new AuthHandler();
+
+        SelfSignedCertificate selfSignedCertificate = new SelfSignedCertificate();
+        System.out.println(selfSignedCertificate.certificate());
+
+        SslContext sslContext = SslContextBuilder
+            .forServer(selfSignedCertificate.certificate(), selfSignedCertificate.privateKey()).build();
 
         ServerBootstrap serverBootstrap = new ServerBootstrap();
         serverBootstrap.channel(NioServerSocketChannel.class);
@@ -56,6 +70,9 @@ public class Server {
                 pipeline.addLast("tsHandler", globalTrafficShapingHandler);
                 pipeline.addLast("metricHandler", metricHandler);
                 pipeline.addLast("idleCheck", new ServerIdleCheckHandler());
+
+                SslHandler sslHandler = sslContext.newHandler(ch.alloc());
+                pipeline.addLast("ssl", sslHandler);
 
                 pipeline.addLast("frameDecoder", new OrderFrameDecoder());
                 pipeline.addLast("frameEncoder", new OrderFrameEncoder());

@@ -2,6 +2,8 @@ package com.totti.order.client;
 
 import java.util.concurrent.ExecutionException;
 
+import javax.net.ssl.SSLException;
+
 import com.totti.order.client.codec.ClientIdlCheckHandler;
 import com.totti.order.client.codec.KeepaliveHandler;
 import com.totti.order.client.codec.OrderFrameDecoder;
@@ -22,9 +24,11 @@ import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.nio.NioSocketChannel;
 import io.netty.handler.logging.LogLevel;
 import io.netty.handler.logging.LoggingHandler;
+import io.netty.handler.ssl.SslContext;
+import io.netty.handler.ssl.SslContextBuilder;
 
 public class Client {
-    public static void main(String[] args) throws InterruptedException, ExecutionException {
+    public static void main(String[] args) throws InterruptedException, ExecutionException, SSLException {
         Bootstrap bootstrap = new Bootstrap();
         bootstrap.channel(NioSocketChannel.class);
         bootstrap.group(new NioEventLoopGroup());
@@ -32,12 +36,18 @@ public class Client {
 
         KeepaliveHandler keepaliveHandler = new KeepaliveHandler();
 
+        SslContextBuilder sslContextBuilder = SslContextBuilder.forClient();
+        // 直接信任自签证书
+        // sslContextBuilder.trustManager(InsecureTrustManagerFactory.INSTANCE);
+        SslContext sslContext = sslContextBuilder.build();
+
         bootstrap.handler(new ChannelInitializer<NioSocketChannel>() {
             @Override
             protected void initChannel(NioSocketChannel ch) throws Exception {
                 ChannelPipeline pipeline = ch.pipeline();
                 pipeline.addLast(new ClientIdlCheckHandler());
 
+                pipeline.addLast(sslContext.newHandler(ch.alloc()));
                 pipeline.addLast(new OrderFrameDecoder());
                 pipeline.addLast(new OrderFrameEncoder());
                 pipeline.addLast(new OrderProtocolEncoder());
