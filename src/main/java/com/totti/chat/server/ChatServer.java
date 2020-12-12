@@ -1,5 +1,9 @@
 package com.totti.chat.server;
 
+import com.totti.chat.server.codec.AuthHandler;
+import com.totti.chat.server.codec.ChatFrameDecode;
+import com.totti.chat.server.codec.ChatFrameEncode;
+
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelInitializer;
@@ -26,6 +30,10 @@ public class ChatServer {
                 protected void initChannel(NioSocketChannel ch) throws Exception {
                     ChannelPipeline pipeline = ch.pipeline();
                     pipeline.addLast(new LoggingHandler(LogLevel.INFO));
+                    pipeline.addLast("decode", new ChatFrameDecode());
+                    pipeline.addLast("encode", new ChatFrameEncode());
+                    pipeline.addLast("auth", new AuthHandler());
+
                 }
             });
 
