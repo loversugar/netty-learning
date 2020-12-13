@@ -2,6 +2,8 @@ package com.totti.chat.server.codec;
 
 import java.util.List;
 
+import com.totti.chat.server.dispactcher.FriendList;
+
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelPipeline;
@@ -21,6 +23,8 @@ public class AuthHandler extends ByteToMessageDecoder {
 
         final int magic = in.getInt(0);
         if (isChatProtocol(magic)) {
+            FriendList.concurrentLinkedQueue.add(ctx.channel());
+
             ChannelPipeline pipeline = ctx.pipeline();
 
             pipeline.addLast(new ChatProtocolDecode());

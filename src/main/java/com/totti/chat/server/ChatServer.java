@@ -23,13 +23,13 @@ public class ChatServer {
         EventLoopGroup workerGroup = new NioEventLoopGroup(0, new DefaultThreadFactory("worker"));
 
         ServerBootstrap serverBootstrap = new ServerBootstrap();
+
         serverBootstrap.group(bossGroup, workerGroup).channel(NioServerSocketChannel.class)
             .option(ChannelOption.SO_BACKLOG, 1024).childOption(ChannelOption.TCP_NODELAY, true)
             .handler(new LoggingHandler(LogLevel.INFO)).childHandler(new ChannelInitializer<NioSocketChannel>() {
                 @Override
                 protected void initChannel(NioSocketChannel ch) throws Exception {
                     ChannelPipeline pipeline = ch.pipeline();
-                    pipeline.addLast(new LoggingHandler(LogLevel.INFO));
                     pipeline.addLast("decode", new ChatFrameDecode());
                     pipeline.addLast("encode", new ChatFrameEncode());
                     pipeline.addLast("auth", new AuthHandler());

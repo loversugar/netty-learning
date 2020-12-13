@@ -1,5 +1,6 @@
 package com.totti.chat.client;
 
+import java.util.Scanner;
 import java.util.concurrent.ExecutionException;
 
 import com.totti.chat.codec.ChatHandler;
@@ -19,8 +20,6 @@ import io.netty.channel.ChannelOption;
 import io.netty.channel.ChannelPipeline;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.nio.NioSocketChannel;
-import io.netty.handler.logging.LogLevel;
-import io.netty.handler.logging.LoggingHandler;
 
 public class ChatClient {
     public static void main(String[] args) throws InterruptedException, ExecutionException {
@@ -33,7 +32,6 @@ public class ChatClient {
             @Override
             protected void initChannel(NioSocketChannel ch) throws Exception {
                 ChannelPipeline pipeline = ch.pipeline();
-                pipeline.addLast(new LoggingHandler(LogLevel.INFO));
 
                 pipeline.addLast("decode", new ChatFrameDecode());
                 pipeline.addLast("encode", new ChatFrameEncode());
@@ -48,9 +46,15 @@ public class ChatClient {
         channelFuture.sync();
 
         Transport transport = new Transport('G', 1, IdUtil.nextId());
-        ChatInfo chatInfo = new ChatInfo("zs", "hello, world");
-        Message message = new Message(transport, chatInfo);
-        channelFuture.channel().writeAndFlush(message);
+
+        Scanner scanner = new Scanner(System.in);
+        System.out.println("输入用户名和信息，以逗号间隔: ");
+        while (scanner.hasNext()) {
+            String[] inputString = scanner.nextLine().split(",");
+            ChatInfo chatInfo = new ChatInfo(inputString[0], inputString[1]);
+            Message message = new Message(transport, chatInfo);
+            channelFuture.channel().writeAndFlush(message);
+        }
 
         channelFuture.channel().closeFuture().get();
     }
