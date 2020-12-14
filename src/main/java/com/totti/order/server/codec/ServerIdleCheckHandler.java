@@ -17,7 +17,7 @@ public class ServerIdleCheckHandler extends IdleStateHandler {
 
     @Override
     protected void channelIdle(ChannelHandlerContext ctx, IdleStateEvent evt) throws Exception {
-        if (evt == IdleStateEvent.FIRST_WRITER_IDLE_STATE_EVENT) {
+        if (evt == IdleStateEvent.READER_IDLE_STATE_EVENT) {
             logger.info("idle check happen, so close connection");
             ctx.close();
             return;
