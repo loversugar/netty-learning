@@ -33,10 +33,12 @@ public class ChatClient {
             protected void initChannel(NioSocketChannel ch) throws Exception {
                 ChannelPipeline pipeline = ch.pipeline();
 
+                pipeline.addLast("idleCheck", new ClientIdleCheck());
                 pipeline.addLast("decode", new ChatFrameDecode());
                 pipeline.addLast("encode", new ChatFrameEncode());
                 pipeline.addLast(new ChatProtocolDecode());
                 pipeline.addLast(new ChatProtocolEncode());
+                pipeline.addLast("keepalive", new KeepAliveHandler());
                 pipeline.addLast(new ChatHandler());
             }
         });

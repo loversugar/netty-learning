@@ -27,6 +27,8 @@ public class AuthHandler extends ByteToMessageDecoder {
 
             ChannelPipeline pipeline = ctx.pipeline();
 
+            pipeline.addLast(new ServerIdleCheck());
+            pipeline.addLast(new IdleCheckHandler());
             pipeline.addLast(new ChatProtocolDecode());
             pipeline.addLast(new ChatProtocolEncode());
             pipeline.addLast(new ChatHandler());
